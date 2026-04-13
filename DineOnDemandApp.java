@@ -145,7 +145,7 @@ public class DineOnDemandApp extends JFrame {
         header.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 40));
 
         // Logo Stylized
-        JLabel logo = new JLabel("DINEON");
+        JLabel logo = new JLabel("DineOn-Demand");
         logo.setFont(TITLE_FONT);
         header.add(logo, BorderLayout.WEST);
 
@@ -212,11 +212,22 @@ public class DineOnDemandApp extends JFrame {
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
             ));
 
-            // Square Image Placeholder filling the card width (180 - 20 padding)
+            // Square Image Placeholder with Custom Image Support
             JPanel imagePlaceholder = new JPanel(new BorderLayout());
             imagePlaceholder.setPreferredSize(new Dimension(160, 160));
             imagePlaceholder.setBackground(Color.WHITE);
-            // No icon labels or borders to avoid "rectangle thingy" artifacts
+            
+            try {
+                java.io.File imgFile = new java.io.File("images/item_placeholder.jpg");
+                if (imgFile.exists()) {
+                    ImageIcon icon = new ImageIcon(imgFile.getAbsolutePath());
+                    Image img = icon.getImage().getScaledInstance(160, 160, Image.SCALE_SMOOTH);
+                    JLabel imgLabel = new JLabel(new ImageIcon(img));
+                    imagePlaceholder.add(imgLabel, BorderLayout.CENTER);
+                }
+            } catch (Exception e) {
+                // Fallback to white space if image fails to load
+            }
             
             add(imagePlaceholder, BorderLayout.NORTH);
 
