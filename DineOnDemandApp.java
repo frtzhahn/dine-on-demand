@@ -94,7 +94,7 @@ public class DineOnDemandApp extends JFrame {
     private void initializeUI() {
         setTitle("DineOn-Demand POS");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 800);
+        setSize(1350, 800);
         getContentPane().setBackground(PRIMARY_BG);
         setLayout(new BorderLayout(0, 0));
 
@@ -142,7 +142,7 @@ public class DineOnDemandApp extends JFrame {
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(SECONDARY_BG);
         header.setPreferredSize(new Dimension(0, 80));
-        header.setBorder(BorderFactory.createEmptyBorder(10, 40, 0, 40));
+        header.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 40));
 
         // Logo Stylized
         JLabel logo = new JLabel("DINEON");
@@ -162,7 +162,7 @@ public class DineOnDemandApp extends JFrame {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setOpaque(false);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 40, 60, 40));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 60, 40));
 
         // Get Categories
         List<String> categories = menuItems.stream()
@@ -204,7 +204,7 @@ public class DineOnDemandApp extends JFrame {
             this.item = item;
             setLayout(new BorderLayout(8, 8));
             setBackground(new Color(248, 248, 248)); // Slight gray background
-            setPreferredSize(new Dimension(180, 320));
+            setPreferredSize(new Dimension(180, 330));
             
             // Modern Border / Card Look with More Pronounced Round Corners
             setBorder(BorderFactory.createCompoundBorder(
@@ -237,11 +237,13 @@ public class DineOnDemandApp extends JFrame {
             contentPanel.add(nameLabel);
             contentPanel.add(Box.createVerticalStrut(2));
             contentPanel.add(priceLabel);
-            contentPanel.add(Box.createVerticalStrut(15));
+            contentPanel.add(Box.createVerticalStrut(12)); // Strict spacing from price
 
             // Controls Area (+/-)
-            JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+            JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
             controls.setOpaque(false);
+            controls.setPreferredSize(new Dimension(180, 36));
+            controls.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36)); // Stop vertical stretching
             
             JButton minusBtn = new JButton("-");
             styleControlBtn(minusBtn);
@@ -268,14 +270,13 @@ public class DineOnDemandApp extends JFrame {
             controls.add(qtyLabel);
             controls.add(plusBtn);
             contentPanel.add(controls);
-            contentPanel.add(Box.createVerticalStrut(15));
+            contentPanel.add(Box.createVerticalStrut(12)); // "Slight more spacing between it again"
 
             // Add to Order Button
             JButton addBtn = new JButton("Add to Order");
             stylePrimaryButton(addBtn);
-            addBtn.setFont(new Font("Segoe UI", Font.BOLD, 12));
-            addBtn.setPreferredSize(new Dimension(140, 40));
-            addBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+            addBtn.setPreferredSize(new Dimension(140, 42));
+            addBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
             addBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
             addBtn.addActionListener(e -> {
                 orderManager.addItem(item, selectionQty);
@@ -284,18 +285,19 @@ public class DineOnDemandApp extends JFrame {
                 updateQtyDisplay();
             });
             contentPanel.add(addBtn);
+            contentPanel.add(Box.createVerticalGlue()); // Absorbs remaining void at the bottom
 
             add(contentPanel, BorderLayout.CENTER);
         }
 
         private void styleControlBtn(JButton btn) {
-            btn.setPreferredSize(new Dimension(32, 32));
-            btn.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            btn.setPreferredSize(new Dimension(36, 36));
+            btn.setFont(new Font("Segoe UI", Font.BOLD, 18));
             btn.setForeground(ACCENT_COLOR);
             btn.setBackground(new Color(230, 230, 230));
             btn.setFocusPainted(false);
             btn.putClientProperty("JButton.buttonType", "roundRect");
-            btn.putClientProperty("JButton.arc", 6);
+            btn.putClientProperty("JButton.arc", 999); // Fully circular
             btn.setBorderPainted(false);
             btn.setMargin(new Insets(0, 0, 0, 0));
         }
@@ -313,7 +315,7 @@ public class DineOnDemandApp extends JFrame {
 
     private JPanel createRightPanel() {
         JPanel container = new JPanel(new BorderLayout(0, 0));
-        container.setPreferredSize(new Dimension(380, 0));
+        container.setPreferredSize(new Dimension(450, 0));
         container.setBackground(SECONDARY_BG);
         container.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, BORDER_LIGHT));
 
@@ -417,6 +419,7 @@ public class DineOnDemandApp extends JFrame {
         
         actionPanel.add(clearButton);
         actionPanel.add(checkoutButton);
+        actionPanel.setPreferredSize(new Dimension(0, 45));
         controls.add(actionPanel, gbc);
 
         container.add(controls, BorderLayout.SOUTH);
@@ -424,18 +427,32 @@ public class DineOnDemandApp extends JFrame {
     }
 
     private void styleTable(JTable table) {
-        table.setRowHeight(40);
+        table.setRowHeight(55);
         table.setFont(NORMAL_FONT);
         table.setShowGrid(false);
         table.setIntercellSpacing(new Dimension(0, 0));
         
         JTableHeader header = table.getTableHeader();
-        header.setPreferredSize(new Dimension(0, 40));
+        header.setPreferredSize(new Dimension(0, 45));
         header.setBackground(SECONDARY_BG);
         header.setForeground(TEXT_LIGHT);
         header.setFont(NORMAL_FONT.deriveFont(12f));
+        header.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER_LIGHT));
+
+        // Center item names and others with padding
+        DefaultTableCellRenderer paddedRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (c instanceof JLabel label) {
+                    label.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+                }
+                return c;
+            }
+        };
         
-        // Alignments
+        table.getColumnModel().getColumn(0).setCellRenderer(paddedRenderer);
+        
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer); // Qty
@@ -445,10 +462,12 @@ public class DineOnDemandApp extends JFrame {
         table.getColumnModel().getColumn(1).setCellRenderer(rightRenderer); // Price
         table.getColumnModel().getColumn(3).setCellRenderer(rightRenderer); // Total
 
-        // Column Config
-        table.getColumnModel().getColumn(0).setPreferredWidth(130); // Item Name
-        table.getColumnModel().getColumn(2).setPreferredWidth(40);  // Qty
-        table.getColumnModel().getColumn(4).setMinWidth(80);        // Action Column
+        // Column Config - Adjusted for 450px width
+        table.getColumnModel().getColumn(0).setPreferredWidth(180); // Item Name
+        table.getColumnModel().getColumn(1).setPreferredWidth(70);  // Price
+        table.getColumnModel().getColumn(2).setPreferredWidth(50);  // Qty
+        table.getColumnModel().getColumn(3).setPreferredWidth(80);  // Total
+        table.getColumnModel().getColumn(4).setMinWidth(90);        // Action Column
     }
 
     private JLabel createTotalLabel(String text, boolean isMain) {
@@ -462,7 +481,6 @@ public class DineOnDemandApp extends JFrame {
         button.setBackground(ACCENT_COLOR);
         button.setForeground(Color.WHITE);
         button.setFont(BUTTON_FONT);
-        button.setPreferredSize(new Dimension(80, 40));
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.putClientProperty("JButton.buttonType", "roundRect");
@@ -471,10 +489,9 @@ public class DineOnDemandApp extends JFrame {
     }
 
     private void styleSecondaryButton(JButton button) {
-        button.setBackground(Color.WHITE);
+        button.setBackground(new Color(230, 230, 230));
         button.setForeground(ACCENT_COLOR);
         button.setFont(BUTTON_FONT);
-        button.setPreferredSize(new Dimension(80, 40));
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.putClientProperty("JButton.buttonType", "roundRect");
@@ -555,25 +572,45 @@ public class DineOnDemandApp extends JFrame {
     private class TableActionRenderer extends javax.swing.table.DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            JPanel panel = new JPanel(new GridBagLayout());
+            panel.setOpaque(true);
+            panel.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+            
             JButton btn = new JButton("Remove");
-            btn.setFont(new Font("Segoe UI", Font.BOLD, 10));
-            btn.setForeground(ACCENT_COLOR);
+            btn.setFont(GEIST_BOLD.deriveFont(10f));
+            btn.setBackground(new Color(220, 50, 50));
+            btn.setForeground(Color.WHITE);
             btn.setFocusPainted(false);
+            btn.setPreferredSize(new Dimension(70, 26));
             btn.putClientProperty("JButton.buttonType", "roundRect");
-            btn.putClientProperty("JButton.arc", 6);
+            btn.putClientProperty("JButton.arc", 999);
             btn.setBorderPainted(false);
-            return btn;
+            
+            panel.add(btn);
+            return panel;
         }
     }
 
     private class TableActionEditor extends DefaultCellEditor {
+        private final JPanel panel;
         private final JButton btn;
         private int currentRow;
 
         public TableActionEditor() {
             super(new JCheckBox());
+            panel = new JPanel(new GridBagLayout());
+            panel.setOpaque(true);
+            
             btn = new JButton("Remove");
+            btn.setFont(GEIST_BOLD.deriveFont(10f));
+            btn.setBackground(new Color(220, 50, 50));
+            btn.setForeground(Color.WHITE);
             btn.setFocusPainted(false);
+            btn.setPreferredSize(new Dimension(70, 26));
+            btn.putClientProperty("JButton.buttonType", "roundRect");
+            btn.putClientProperty("JButton.arc", 999);
+            btn.setBorderPainted(false);
+            
             btn.addActionListener(e -> {
                 String itemName = (String) tableModel.getValueAt(currentRow, 0);
                 for (MenuItem item : menuItems) {
@@ -586,12 +623,14 @@ public class DineOnDemandApp extends JFrame {
                 updateOrderDisplay();
                 refreshMenuCards();
             });
+            panel.add(btn);
         }
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             this.currentRow = row;
-            return btn;
+            panel.setBackground(table.getSelectionBackground());
+            return panel;
         }
     }
 
