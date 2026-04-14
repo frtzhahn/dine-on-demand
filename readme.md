@@ -1,4 +1,4 @@
 # DineOn-Demand
 
 ## Compile & Run
-`javac *.java && java DineOnDemandApp`
+`javac -cp ".;lib/flatlaf.jar" *.java && java -cp ".;lib/flatlaf.jar" DineOnDemandApp`
