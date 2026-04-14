@@ -1,4 +1,4 @@
-#DineOn-Demand
+# DineOn-Demand
 
-#Compile & Run
+# Compile & Run
 `javac *.java && java DineOnDemandApp`
