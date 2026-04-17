@@ -4,8 +4,8 @@ import java.util.List;
 public class MenuData {
     public static List<MenuItem> getInitialMenu() {
         List<MenuItem> menu = new ArrayList<>();
-        menu.add(new MenuItem("Classic Burger", 150.00, "Mains", "images/item_placeholder.jpg"));
-        menu.add(new MenuItem("Cheeseburger", 180.00, "Mains", "images/item_placeholder.jpg"));
+        menu.add(new MenuItem("Classic Burger", 150.00, "Mains", "images/image.png"));
+        menu.add(new MenuItem("Cheeseburger", 180.00, "Mains", "images/asdasd.jpeg"));
         menu.add(new MenuItem("Chicken Burger", 170.00, "Mains", "images/item_placeholder.jpg"));
         menu.add(new MenuItem("French Fries", 60.00, "Sides", "images/item_placeholder.jpg"));
         menu.add(new MenuItem("Onion Rings", 75.00, "Sides", "images/item_placeholder.jpg"));
